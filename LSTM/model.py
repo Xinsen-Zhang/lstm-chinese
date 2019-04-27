@@ -9,8 +9,10 @@ class LSTM(nn.Module):
         self.lstm = nn.LSTM(
             input_size=embedding_dim, 
             hidden_size=hidden_size,
-            batch_first= True
+            batch_first= True,
+            num_layers= 1
             )
+        self.dropout= nn.Dropout(0.2)
         self.linear = nn.Linear(hidden_size, self.vocab_size)
         # self.m = nn.Softmax()
 

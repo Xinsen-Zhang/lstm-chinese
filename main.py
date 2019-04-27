@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import numpy as np
 import torch
 from tqdm import tqdm
@@ -12,6 +11,7 @@ from config import EMBEDDING_DIM as embedding_dim
 from config import LR as lr
 from config import TIME_STEPS as time_steps
 import os
+import codecs
 
 epoch_num = 1
 use_cuda = True if torch.cuda.is_available() else False
@@ -57,17 +57,34 @@ for i,(trainX, trainY) in tqdm(enumerate(dataloader)):
             hidden = (hidden[0].cuda(), hidden[1].cuda())
     prediction,hidden = lstm(trainX_, hidden)
     loss = criterion(prediction.view((batch_size * time_steps, -1)), trainY_.view((batch_size * time_steps)).long())
-    print(loss)
     loss.backward(retain_graph=True)
+    nn.utils.clip_grad_norm_(lstm.parameters(), 5)
     optimizer.step()
+    if i % 50 == 0:
+        print('batch [{}/{}] loss: {:.3f}'.format(i, batch_num, loss))
+        predictions = prediction.cpu().detach().numpy()
+        predictions = np.argmax(predictions, axis= 1)
+        predictions = ''.join([id2char[char] for char in predictions.flatten()])
+        print(predictions)
 print('batch [{}/{}] loss {:.3f}'.format(i, batch_num, loss))
 torch.save(lstm, './checkpoint/lstm.pkl')
 torch.save(hidden[0], './checkpoint/h_n.pkl')
 torch.save(hidden[1], './checkpoint/c_n.pkl')
 predictions = prediction.cpu().detach().numpy()
 predictions = np.argmax(predictions, axis= 1)
-print(predictions)
 predictions = ''.join([id2char[char] for char in predictions.flatten()])
 print(predictions)
-=======
->>>>>>> 310ac6c229cecad978ce4ed57d3e83e73298a059
+conntent_ = '\nbatch [{}/{}] loss {:.3f}'.format(i, batch_num, loss) + '\n{}'.format(predictions)
+try:
+    f = codecs.open('./checkpoint/log.txt', 'r', encoding='utf8')
+    epoch = int(f.readline().split(':')[1])
+    content = 'epoch:{}'.format(epoch + 1)
+    f.close()
+    f = codecs.open('./checkpoint/log.txt', 'w', encoding='utf8')
+    f.write(content + conntent_)
+    f.close()
+except Exception as e:
+    f = codecs.open('./checkpoint/log.txt', 'w', encoding='utf8')
+    content = 'epoch:{}'.format(1)
+    f.write(content + conntent_)
+    f.close()
