@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import numpy as np
 import torch
 from tqdm import tqdm
@@ -68,3 +69,5 @@ predictions = np.argmax(predictions, axis= 1)
 print(predictions)
 predictions = ''.join([id2char[char] for char in predictions.flatten()])
 print(predictions)
+=======
+>>>>>>> 310ac6c229cecad978ce4ed57d3e83e73298a059
