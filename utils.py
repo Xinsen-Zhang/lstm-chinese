@@ -83,10 +83,11 @@ def yield_data(data, batch_size, time_step):
     for i in range(batch_num):
         blockx = datax[i * data_num: (i+1)*data_num]
         blocky = datay[i * data_num: (i+1)*data_num]
-        blocky_ = blocky.reshape((batch_size, time_step))
+        blockx_ = blockx.reshape((batch_size, time_step)).copy()
+        blocky_ = blocky.reshape((batch_size, time_step)).copy()
         # blocky = np.zeros((batch_size, time_step, VOCAB_NUM))
         # blockx = np.array(blockx)
-        yield (blockx.reshape((batch_size, time_step, 1)),blocky_)
+        yield (blockx.reshape((batch_size, time_step)),blocky_)
     # rest = len(data) % data_num
     # block = data[-rest:]
     # batch_size = len(block) // time_step
@@ -98,8 +99,8 @@ dataloader = yield_data(numdata, batch_size, time_steps)
 
 # trainX = data[0]
 # trainY = data[1]
-# print([id2char[char] for char in trainX.flatten()])
-# print([id2char[char] for char in trainY.flatten()])
+# print(''.join([id2char[char] for char in trainX[0].flatten()]))
+# print(''.join([id2char[char] for char in trainY[0].flatten()]))
 # print(trainX)
 # print(trainY)
 
@@ -109,6 +110,6 @@ dataloader = yield_data(numdata, batch_size, time_steps)
 # from torch import nn
 # from torch.autograd import Variable
 # embeded = nn.Embedding(VOCAB_NUM, 10)
-# train = Variable(torch.LongTensor(torch.from_numpy(data[0])))
+# train = Variable(torch.from_numpy(data[0]))
 # train_embeded = embeded(train)
 # print(train_embeded.shape)
