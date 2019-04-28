@@ -5,7 +5,7 @@ from config import BATCH_SIZE as batch_size
 from config import TIME_STEPS as time_steps
 
 # =============== 读取文本内容 ===============
-f = codecs.open('./data/xiyouji.txt', 'r', encoding='utf-8')
+f = codecs.open('./data/new.txt', 'r', encoding='utf-8')
 data = f.readlines()
 # data = ''.join(data)
 

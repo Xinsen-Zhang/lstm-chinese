@@ -35,7 +35,7 @@ except Exception as e:
 
 # ============= loss 和 optimizer 的定义 =============
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(lstm.parameters(), lr=0.005)
+optimizer = torch.optim.Adam(lstm.parameters(), lr=0.02)
 
 # ============ 设备的转移 ============================
 if use_cuda:
@@ -58,20 +58,20 @@ for i,(trainX, trainY) in tqdm(enumerate(dataloader)):
     prediction,hidden = lstm(trainX_, hidden)
     loss = criterion(prediction.view((batch_size * time_steps, -1)), trainY_.view((batch_size * time_steps)).long())
     loss.backward(retain_graph=True)
-    nn.utils.clip_grad_norm_(lstm.parameters(), 5)
+    nn.utils.clip_grad_norm_(lstm.parameters(), 1.0)
     optimizer.step()
-    if i % 50 == 0:
-        print('batch [{}/{}] loss: {:.3f}'.format(i, batch_num, loss))
+    if i % 100 == 0:
+        # print('batch [{}/{}] loss: {:.3f}'.format(i, batch_num, loss))
         predictions = prediction.cpu().detach().numpy()
-        predictions = np.argmax(predictions, axis= 1)
+        predictions = np.argmax(predictions, axis= 2)
         predictions = ''.join([id2char[char] for char in predictions.flatten()])
-        print(predictions)
+        print(predictions[:100])
 print('batch [{}/{}] loss {:.3f}'.format(i, batch_num, loss))
 torch.save(lstm, './checkpoint/lstm.pkl')
 torch.save(hidden[0], './checkpoint/h_n.pkl')
 torch.save(hidden[1], './checkpoint/c_n.pkl')
 predictions = prediction.cpu().detach().numpy()
-predictions = np.argmax(predictions, axis= 1)
+predictions = np.argmax(predictions, axis= 2)
 predictions = ''.join([id2char[char] for char in predictions.flatten()])
 print(predictions)
 conntent_ = '\nbatch [{}/{}] loss {:.3f}'.format(i, batch_num, loss) + '\n{}'.format(predictions)
