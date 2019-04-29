@@ -187,7 +187,7 @@ hidden = None
 
 del net
 del hidden
-del optimizer
+# del optimizer
 torch.cuda.empty_cache()
 try:
     if size_batch:
