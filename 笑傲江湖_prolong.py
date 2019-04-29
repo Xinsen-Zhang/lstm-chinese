@@ -34,9 +34,9 @@ pattern = re.compile(r'\(.*?\)')
 data = [pattern.sub('', line) for line in data]
 
 # 删除
-, ,' '
+
 # data = [word.replace('.', '。') for word in data]
-# data = [word.replace('', '') for word in data]
+# data = [word.replace('', '') for word in data]
 # data = [word.replace(' ', '') for word in data]
 
 # 删除章节名称
