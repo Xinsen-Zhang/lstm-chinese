@@ -217,7 +217,7 @@ net.train()
 batch_num = len(DATA) // (batch_size * time_step)
 criterion = nn.CrossEntropyLoss()
 try:
-    optimizer = torch.optim.Adagrad(net.parameters(), lr= 5e-2)
+    optimizer = torch.optim.RMSprop(net.parameters(), lr= 0.0005)
 except Exception as e:
     optimizer = torch.optim.Adagrad(net.parameters(), lr= 5e-2)
 try:
