@@ -217,7 +217,7 @@ net.train()
 batch_num = len(DATA) // (batch_size * time_step)
 criterion = nn.CrossEntropyLoss()
 try:
-    optimizer = torch.load('./checkpoint/optimizer.pkl')
+    optimizer = torch.optim.Adagrad(net.parameters(), lr= 5e-2)
 except Exception as e:
     optimizer = torch.optim.Adagrad(net.parameters(), lr= 5e-2)
 try:
@@ -310,7 +310,7 @@ if os.path.exists('./checkpoint'):
 else:
     os.mkdir('./checkpoint')
 torch.save(net, './checkpoint/net.pkl')
-torch.save(optimizer, './checkpoint/optimizer.pkl')
+# torch.save(optimizer, './checkpoint/optimizer.pkl')
 torch.save(hidden[0], './checkpoint/hidden_0.pkl')
 torch.save(hidden[1], './checkpoint/hidden_1.pkl')
 if os.path.exists('./checkpoint/story.txt'):
