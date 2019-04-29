@@ -317,6 +317,10 @@ if os.path.exists('./checkpoint/story.txt'):
 else:
     open = epoch_num
 f = codecs.open('./checkpoint/story.txt', 'w', encoding='utf8')
-f.write('epoch:{}\n{}'.format(epoch, content))
+f.write('epoch:{}'.format(epoch))
+f.close()
+f = codecs.open('./checkpoint/story_after_{}_epoch.txt'.format(epoch), 'w', encoding='utf8')
+f.write(content)
+f.close()
 os.system('git add .')
 os.system('git commit -m "经过{}轮迭代之后生成的文本"'.format(epoch))
