@@ -201,7 +201,7 @@ bidirectional = False
 from tqdm import tqdm
 
 try:
-    net = torch.load('.checkpoint/net.pkl')
+    net = torch.load('./checkpoint/net.pkl')
 except Exception as e:
     net = CharRNN(embedding_size= 300,
                  hidden_size= 512,
@@ -308,10 +308,10 @@ if os.path.exists('./checkpoint'):
     pass
 else:
     os.mkdir('./checkpoint')
-torch.save(net, '.checkpoint/net.pkl')
-torch.save(optimizer, '.checkpoint/optimizer.pkl')
-torch.save(hidden[0], '.checkpoint/hidden_0.pkl')
-torch.save(hidden[1], '.checkpoint/hidden_1.pkl')
+torch.save(net, './checkpoint/net.pkl')
+torch.save(optimizer, './checkpoint/optimizer.pkl')
+torch.save(hidden[0], './checkpoint/hidden_0.pkl')
+torch.save(hidden[1], './checkpoint/hidden_1.pkl')
 if os.path.exists('./checkpoint/story.txt'):
     f = codecs.open('./checkpoint/story.txt', 'r', encoding='utf8')
     epoch = int(f.readline().split(':')[1])
