@@ -202,6 +202,7 @@ from tqdm import tqdm
 
 try:
     net = torch.load('./checkpoint/net.pkl')
+    print('the model has been loaded successfully')
 except Exception as e:
     net = CharRNN(embedding_size= 300,
                  hidden_size= 512,
