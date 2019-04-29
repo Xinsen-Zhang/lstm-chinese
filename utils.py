@@ -3,6 +3,7 @@ import re
 import numpy as np
 from config import BATCH_SIZE as batch_size
 from config import TIME_STEPS as time_steps
+from sklearn.preprocessing import OneHotEncoder
 
 # =============== 读取文本内容 ===============
 f = codecs.open('./data/new.txt', 'r', encoding='utf-8')
@@ -17,7 +18,7 @@ data = [pattern.sub('', line) for line in data]
 # 删除\n, \r,' '
 data = [word.replace('.', '。') for word in data]
 data = [word.replace('\r', '') for word in data]
-data = [word.replace(' ', '') for word in data]
+# data = [word.replace(' ', '') for word in data]
 
 # 删除章节名称
 pattern = re.compile(r'.*?第.*?章.*')
@@ -72,44 +73,25 @@ batch_num = len(numdata) // (batch_size * time_steps)
 # print(len(numdata))
 
 # ============= 定义 dataloader =============
-def yield_data(data, batch_size, time_step):
+def yield_data( batch_size, time_step, data= numdata):
+    encoder = OneHotEncoder(categories= [range(VOCAB_NUM)])
     start = [i * time_step for i in range(batch_size)]
     end = [(i+1) * time_step for i in range(batch_size)]
     data_num = batch_size * time_step
     batch_num = len(data) // data_num
-    datax = data
-    datay = np.roll(data, -1)
-    # 10 // 3 = 3 . 0=>3,1=>3,2=>3, 3=>1
-    for i in range(batch_num):
-        blockx = datax[i * data_num: (i+1)*data_num]
-        blocky = datay[i * data_num: (i+1)*data_num]
-        blockx_ = blockx.reshape((batch_size, time_step)).copy()
-        blocky_ = blocky.reshape((batch_size, time_step)).copy()
-        # blocky = np.zeros((batch_size, time_step, VOCAB_NUM))
-        # blockx = np.array(blockx)
-        yield (blockx.reshape((batch_size, time_step)),blocky_)
-    # rest = len(data) % data_num
-    # block = data[-rest:]
-    # batch_size = len(block) // time_step
-    # yield block.reshape((batch_size, time_step, 1))
+    arr = data[:data_num * batch_num]
+    arr_y = np.roll(arr,-1)
+    arr = arr.reshape((batch_size, -1))
+    arr_y = arr_y.reshape((batch_size, -1))
+    for i in range(0,arr.shape[1], time_step):
+        x = arr[:,i:i + time_step].reshape((batch_size, -1))
+        x = encoder.fit_transform(x.reshape(-1,1)).toarray().reshape(x.shape[0], x.shape[1], -1)
+        y = arr_y[:,i:i + time_step].reshape((batch_size, -1))
+        yield (np.array(x, dtype= np.float),y)
 
-dataloader = yield_data(numdata, batch_size, time_steps)
-# for data in dataloader:
-#     break
-
-# trainX = data[0]
-# trainY = data[1]
-# print(''.join([id2char[char] for char in trainX[0].flatten()]))
-# print(''.join([id2char[char] for char in trainY[0].flatten()]))
-# print(trainX)
-# print(trainY)
-
-
-# word embedding 的尝试
-# import torch
-# from torch import nn
-# from torch.autograd import Variable
-# embeded = nn.Embedding(VOCAB_NUM, 10)
-# train = Variable(torch.from_numpy(data[0]))
-# train_embeded = embeded(train)
-# print(train_embeded.shape)
+if __name__ == '__main__':
+    data = yield_data(128,100)
+    for x,y in data:
+        break
+    print(x.shape)
+    print(y.shape)
