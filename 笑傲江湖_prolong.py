@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 import os
 import sys
@@ -23,7 +24,7 @@ Original file is located at
 import codecs
 import re
 # =============== 读取文本内容 ===============
-f = codecs.open('./xiaoaojianghu.txt', 'r', encoding='utf-8')
+f = codecs.open('./data/xiaoaojianghu.txt', 'r', encoding='utf-8')
 data = f.readlines()
 # data = ''.join(data)
 
@@ -32,9 +33,10 @@ data = f.readlines()
 pattern = re.compile(r'\(.*?\)')
 data = [pattern.sub('', line) for line in data]
 
-# 删除\n, \r,' '
+# 删除
+, ,' '
 # data = [word.replace('.', '。') for word in data]
-# data = [word.replace('\r', '') for word in data]
+# data = [word.replace('', '') for word in data]
 # data = [word.replace(' ', '') for word in data]
 
 # 删除章节名称
@@ -67,13 +69,13 @@ data = [line.replace('……', '。') for line in data]
 # ==============判断char是否是乱码===================
 def is_uchar(uchar):
     """判断一个unicode是否是汉字"""
-    if uchar >= u'\u4e00' and uchar<=u'\u9fa5':
+    if uchar >= u'一' and uchar<=u'龥':
             return True
     """判断一个unicode是否是数字"""
-    if uchar >= u'\u0030' and uchar<=u'\u0039':
+    if uchar >= u'0' and uchar<=u'9':
             return True       
     """判断一个unicode是否是英文字母"""
-    if (uchar >= u'\u0041' and uchar<=u'\u005a') or (uchar >= u'\u0061' and uchar<=u'\u007a'):
+    if (uchar >= u'A' and uchar<=u'Z') or (uchar >= u'a' and uchar<=u'z'):
             return True
     if uchar in ('，','。','：','？','“','”','！','；','、','《','》','——'):
             return True
