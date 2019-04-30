@@ -177,7 +177,7 @@ try:
         batch_size = size_batch
 except Exception as e:
     batch_size = 20
-time_step = 1
+time_step = 200
 embedding_size = 300
 hidden_size = 512
 epoch_num = num_epoch
